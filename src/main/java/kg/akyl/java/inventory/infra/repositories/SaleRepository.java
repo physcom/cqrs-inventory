@@ -1,9 +1,8 @@
-package kg.gns.java.inventorysystem.infra.repositories;
+package kg.akyl.java.inventory.infra.repositories;
 
-import kg.gns.java.inventorysystem.domain.Sale;
+import kg.akyl.java.inventory.domain.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 

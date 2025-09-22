@@ -1,8 +1,8 @@
-package kg.gns.java.inventorysystem.infra.batch;
+package kg.akyl.java.inventory.infra.batch;
 
-import kg.gns.java.inventorysystem.command.commands.UpdateProductQuantityCommand;
-import kg.gns.java.inventorysystem.command.handlers.ProductCommandHandler;
-import kg.gns.java.inventorysystem.infra.locking.DistributedLockManager;
+import kg.akyl.java.inventory.command.commands.UpdateProductQuantityCommand;
+import kg.akyl.java.inventory.command.handlers.ProductCommandHandler;
+import kg.akyl.java.inventory.infra.locking.DistributedLockManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

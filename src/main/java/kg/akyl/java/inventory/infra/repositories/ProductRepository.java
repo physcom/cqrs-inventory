@@ -1,7 +1,7 @@
-package kg.gns.java.inventorysystem.infra.repositories;
+package kg.akyl.java.inventory.infra.repositories;
 
 import jakarta.persistence.LockModeType;
-import kg.gns.java.inventorysystem.domain.Product;
+import kg.akyl.java.inventory.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;

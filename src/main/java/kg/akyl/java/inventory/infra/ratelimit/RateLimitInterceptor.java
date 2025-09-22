@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.infra.ratelimit;
+package kg.akyl.java.inventory.infra.ratelimit;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

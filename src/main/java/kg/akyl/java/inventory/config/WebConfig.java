@@ -1,6 +1,6 @@
-package kg.gns.java.inventorysystem.config;
+package kg.akyl.java.inventory.config;
 
-import kg.gns.java.inventorysystem.infra.ratelimit.RateLimitInterceptor;
+import kg.akyl.java.inventory.infra.ratelimit.RateLimitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

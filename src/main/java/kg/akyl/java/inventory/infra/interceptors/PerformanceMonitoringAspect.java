@@ -1,7 +1,7 @@
-package kg.gns.java.inventorysystem.infra.interceptors;
+package kg.akyl.java.inventory.infra.interceptors;
 
 import io.micrometer.core.instrument.Timer;
-import kg.gns.java.inventorysystem.infra.metrics.InventoryMetrics;
+import kg.akyl.java.inventory.infra.metrics.InventoryMetrics;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,7 +16,7 @@ public class PerformanceMonitoringAspect {
     @Autowired
     private InventoryMetrics inventoryMetrics;
 
-    @Around("execution(* kg.gns.java.inventorysystem.query.handlers.ProductQueryHandler.*(..))")
+    @Around("execution(* kg.akyl.java.inventory.query.handlers.ProductQueryHandler.*(..))")
     public Object monitorProductQueries(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("Monitoring product queries");
         Timer.Sample sample = inventoryMetrics.startProductQueryTimer();
@@ -27,7 +27,7 @@ public class PerformanceMonitoringAspect {
         }
     }
 
-    @Around("execution(* kg.gns.java.inventorysystem.command.handlers.SaleCommandHandler.*(..))")
+    @Around("execution(* kg.akyl.java.inventory.command.handlers.SaleCommandHandler.*(..))")
     public Object monitorSaleProcessing(ProceedingJoinPoint joinPoint) throws Throwable {
         Timer.Sample sample = inventoryMetrics.startSaleProcessingTimer();
         try {
@@ -39,7 +39,7 @@ public class PerformanceMonitoringAspect {
         }
     }
 
-    @Around("execution(* kg.gns.java.inventorysystem.command.handlers.ProductCommandHandler.handle(..))")
+    @Around("execution(* kg.akyl.java.inventory.command.handlers.ProductCommandHandler.handle(..))")
     public Object monitorProductCommands(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         Object result = joinPoint.proceed();

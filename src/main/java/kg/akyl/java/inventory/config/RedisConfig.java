@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.config;
+package kg.akyl.java.inventory.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;

@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.command.commands;
+package kg.akyl.java.inventory.command.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

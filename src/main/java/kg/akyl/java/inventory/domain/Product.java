@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.domain;
+package kg.akyl.java.inventory.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
-package kg.gns.java.inventorysystem.web;
+package kg.akyl.java.inventory.web;
 
-import kg.gns.java.inventorysystem.query.handlers.AnalyticsQueryHandler;
-import kg.gns.java.inventorysystem.query.projections.InventoryAnalyticsProjection;
-import kg.gns.java.inventorysystem.query.projections.SalesAnalyticsProjection;
+import kg.akyl.java.inventory.query.handlers.AnalyticsQueryHandler;
+import kg.akyl.java.inventory.query.projections.InventoryAnalyticsProjection;
+import kg.akyl.java.inventory.query.projections.SalesAnalyticsProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;

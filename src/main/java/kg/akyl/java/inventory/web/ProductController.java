@@ -1,12 +1,12 @@
-package kg.gns.java.inventorysystem.web;
+package kg.akyl.java.inventory.web;
 
-import kg.gns.java.inventorysystem.command.commands.CreateProductCommand;
-import kg.gns.java.inventorysystem.command.commands.ReserveProductCommand;
-import kg.gns.java.inventorysystem.command.commands.UpdateProductQuantityCommand;
-import kg.gns.java.inventorysystem.command.handlers.ProductCommandHandler;
-import kg.gns.java.inventorysystem.query.handlers.ProductQueryHandler;
-import kg.gns.java.inventorysystem.query.projections.InventoryStatusProjection;
-import kg.gns.java.inventorysystem.query.projections.ProductProjection;
+import kg.akyl.java.inventory.command.commands.CreateProductCommand;
+import kg.akyl.java.inventory.command.commands.ReserveProductCommand;
+import kg.akyl.java.inventory.command.commands.UpdateProductQuantityCommand;
+import kg.akyl.java.inventory.command.handlers.ProductCommandHandler;
+import kg.akyl.java.inventory.query.handlers.ProductQueryHandler;
+import kg.akyl.java.inventory.query.projections.InventoryStatusProjection;
+import kg.akyl.java.inventory.query.projections.ProductProjection;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.infra.locking;
+package kg.akyl.java.inventory.infra.locking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

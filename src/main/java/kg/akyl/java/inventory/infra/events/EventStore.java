@@ -1,7 +1,7 @@
-package kg.gns.java.inventorysystem.infra.events;
+package kg.akyl.java.inventory.infra.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kg.gns.java.inventorysystem.domain.InventoryEvent;
+import kg.akyl.java.inventory.domain.InventoryEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

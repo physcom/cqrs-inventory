@@ -1,7 +1,7 @@
-package kg.gns.java.inventorysystem.query.handlers;
+package kg.akyl.java.inventory.query.handlers;
 
-import kg.gns.java.inventorysystem.query.projections.InventoryStatusProjection;
-import kg.gns.java.inventorysystem.query.projections.ProductProjection;
+import kg.akyl.java.inventory.query.projections.InventoryStatusProjection;
+import kg.akyl.java.inventory.query.projections.ProductProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;

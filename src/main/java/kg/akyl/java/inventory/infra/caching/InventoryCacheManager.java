@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.infra.caching;
+package kg.akyl.java.inventory.infra.caching;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

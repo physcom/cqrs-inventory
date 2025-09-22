@@ -1,9 +1,9 @@
-package kg.gns.java.inventorysystem.web;
+package kg.akyl.java.inventory.web;
 
-import kg.gns.java.inventorysystem.command.commands.ProcessSaleCommand;
-import kg.gns.java.inventorysystem.command.handlers.SaleCommandHandler;
-import kg.gns.java.inventorysystem.domain.Sale;
-import kg.gns.java.inventorysystem.infra.repositories.SaleRepository;
+import kg.akyl.java.inventory.command.commands.ProcessSaleCommand;
+import kg.akyl.java.inventory.command.handlers.SaleCommandHandler;
+import kg.akyl.java.inventory.domain.Sale;
+import kg.akyl.java.inventory.infra.repositories.SaleRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

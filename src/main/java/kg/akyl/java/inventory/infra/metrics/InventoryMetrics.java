@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.infra.metrics;
+package kg.akyl.java.inventory.infra.metrics;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
@@ -26,8 +26,8 @@ public class InventoryMetrics {
     private Counter inventoryUpdateCounter;
     private Timer productQueryTimer;
     private Timer saleProcessingTimer;
-    private AtomicLong lowStockItems = new AtomicLong();
-    private AtomicLong totalProducts = new AtomicLong();
+    private final AtomicLong lowStockItems = new AtomicLong();
+    private final AtomicLong totalProducts = new AtomicLong();
 
     @PostConstruct
     public void initMetrics() {
@@ -54,13 +54,9 @@ public class InventoryMetrics {
                 .register(meterRegistry);
 
         // Gauges
-//        Gauge.builder("inventory.products.total")
-//                .description("Total number of products")
-//                .register(meterRegistry, this, InventoryMetrics::getTotalProducts);
-//
-//        Gauge.builder("inventory.products.low_stock")
-//                .description("Number of products with low stock")
-//                .register(meterRegistry, this, InventoryMetrics::getLowStockItems);
+        meterRegistry.gauge("inventory.products.total", this, InventoryMetrics::getTotalProducts);
+
+        meterRegistry.gauge("inventory.products.low_stock", this, InventoryMetrics::getLowStockItems);
 
         // Schedule periodic updates for gauges
         updateGaugeMetrics();

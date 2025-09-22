@@ -1,7 +1,6 @@
-package kg.gns.java.inventorysystem;
+package kg.akyl.java.inventory;
 
-import kg.gns.java.inventorysystem.InventoryApplication;
-import kg.gns.java.inventorysystem.web.ProductController;
+import kg.akyl.java.inventory.web.ProductController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

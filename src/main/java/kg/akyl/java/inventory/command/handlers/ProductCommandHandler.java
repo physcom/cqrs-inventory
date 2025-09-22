@@ -1,14 +1,14 @@
-package kg.gns.java.inventorysystem.command.handlers;
+package kg.akyl.java.inventory.command.handlers;
 
 import jakarta.transaction.Transactional;
-import kg.gns.java.inventorysystem.command.commands.CreateProductCommand;
-import kg.gns.java.inventorysystem.command.commands.ReserveProductCommand;
-import kg.gns.java.inventorysystem.command.commands.UpdateProductQuantityCommand;
-import kg.gns.java.inventorysystem.domain.InventoryEvent;
-import kg.gns.java.inventorysystem.domain.Product;
-import kg.gns.java.inventorysystem.domain.ProductStatus;
-import kg.gns.java.inventorysystem.infra.events.EventStore;
-import kg.gns.java.inventorysystem.infra.repositories.ProductRepository;
+import kg.akyl.java.inventory.command.commands.CreateProductCommand;
+import kg.akyl.java.inventory.command.commands.ReserveProductCommand;
+import kg.akyl.java.inventory.command.commands.UpdateProductQuantityCommand;
+import kg.akyl.java.inventory.domain.InventoryEvent;
+import kg.akyl.java.inventory.domain.Product;
+import kg.akyl.java.inventory.domain.ProductStatus;
+import kg.akyl.java.inventory.infra.events.EventStore;
+import kg.akyl.java.inventory.infra.repositories.ProductRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

@@ -1,7 +1,7 @@
-package kg.gns.java.inventorysystem.web;
+package kg.akyl.java.inventory.web;
 
-import kg.gns.java.inventorysystem.command.commands.UpdateProductQuantityCommand;
-import kg.gns.java.inventorysystem.infra.batch.BatchInventoryProcessor;
+import kg.akyl.java.inventory.command.commands.UpdateProductQuantityCommand;
+import kg.akyl.java.inventory.infra.batch.BatchInventoryProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

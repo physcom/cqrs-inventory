@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.config;
+package kg.akyl.java.inventory.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

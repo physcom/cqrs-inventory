@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.query.projections;
+package kg.akyl.java.inventory.query.projections;
 
 import lombok.Data;
 

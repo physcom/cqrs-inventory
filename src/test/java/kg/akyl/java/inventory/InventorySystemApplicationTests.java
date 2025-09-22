@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem;
+package kg.akyl.java.inventory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

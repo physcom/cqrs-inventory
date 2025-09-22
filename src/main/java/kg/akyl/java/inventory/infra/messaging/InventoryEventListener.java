@@ -1,7 +1,6 @@
-package kg.gns.java.inventorysystem.infra.messaging;
+package kg.akyl.java.inventory.infra.messaging;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kg.gns.java.inventorysystem.domain.InventoryEvent;
+import kg.akyl.java.inventory.domain.InventoryEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -19,9 +18,6 @@ import java.util.Objects;
 public class InventoryEventListener {
     @Autowired
     private CacheManager cacheManager;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @KafkaListener(topics = "product-events", groupId = "inventory-group")
     public void handleProductEvents(@Payload InventoryEvent event,

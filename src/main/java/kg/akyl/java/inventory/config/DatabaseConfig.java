@@ -1,4 +1,4 @@
-package kg.gns.java.inventorysystem.config;
+package kg.akyl.java.inventory.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "kg.gns.java.inventorysystem.infra.repositories")
+@EnableJpaRepositories(basePackages = "kg.akyl.java.inventory.infra.repositories")
 public class DatabaseConfig {
 
     @Value("${spring.datasource.url}")
