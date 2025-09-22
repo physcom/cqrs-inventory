@@ -1,0 +1,32 @@
+-- -- Partition sales table by month for better performance
+-- CREATE TABLE sales_partitioned (
+--                                    LIKE sales INCLUDING ALL
+-- ) PARTITION BY RANGE (sale_date);
+--
+-- -- Create partitions for current and future months
+-- DO $$
+-- DECLARE
+-- start_date DATE;
+--     end_date DATE;
+--     partition_name TEXT;
+-- BEGIN
+-- FOR i IN 0..11 LOOP
+--     -- Create a function to automatically create future partitions
+-- CREATE OR REPLACE FUNCTION create_monthly_partition()
+-- RETURNS VOID AS $
+-- DECLARE
+-- start_date DATE;
+--     end_date DATE;
+--     partition_name TEXT;
+-- BEGIN
+--     start_date := date_trunc('month', CURRENT_DATE + INTERVAL '1 month');
+--     end_date := start_date + INTERVAL '1 month';
+--     partition_name := 'sales_' || to_char(start_date, 'YYYY_MM');
+--
+-- EXECUTE format('CREATE TABLE IF NOT EXISTS %I PARTITION OF sales_partitioned
+--                    FOR VALUES FROM (%L) TO (%L)',
+--                partition_name, start_date, end_date);
+-- END $;
+--
+-- -- Schedule partition creation (requires pg_cron extension)
+-- -- SELECT cron.schedule('create-partition', '0 0 1 * *', 'SELECT create_monthly_partition();');

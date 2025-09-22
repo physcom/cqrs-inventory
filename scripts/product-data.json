@@ -1,0 +1,8 @@
+{
+  "sku": "TEST-SKU-001",
+  "name": "Test Product",
+  "description": "Test product for load testing",
+  "price": 29.99,
+  "quantity": 1000,
+  "category": "electronics"
+}

@@ -1,0 +1,46 @@
+groups:
+  - name: inventory.rules
+    rules:
+      - alert: HighCPUUsage
+        expr: cpu_usage_percent > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% for more than 5 minutes"
+
+      - alert: HighMemoryUsage
+        expr: memory_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% for more than 5 minutes"
+
+      - alert: DatabaseConnectionPoolExhausted
+        expr: hikari_connections_active / hikari_connections_max > 0.9
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database connection pool nearly exhausted"
+          description: "More than 90% of database connections are in use"
+
+      - alert: LowInventory
+        expr: inventory_low_stock_items > 10
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Multiple items are low in stock"
+          description: "{{ $value }} items are below the minimum stock threshold"
+
+      - alert: KafkaConsumerLag
+        expr: kafka_consumer_lag_sum > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka consumer lag is high"
