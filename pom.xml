@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>17</java.version>
+        <spring-boot.version>3.5.6</spring-boot.version>
+        <springdoc.version>2.3.0</springdoc.version>
     </properties>
     <dependencies>
         <!-- Spring Boot Starters -->
@@ -90,6 +92,14 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- OpenAPI/Swagger Documentation -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

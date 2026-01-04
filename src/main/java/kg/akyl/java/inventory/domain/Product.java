@@ -1,7 +1,11 @@
 package kg.akyl.java.inventory.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Product {
 
     @Id
@@ -42,6 +47,16 @@ public class Product {
     @Column(nullable = false)
     private Integer reservedQuantity = 0;
 
+    @NotNull(message = "Stock quantity is required")
+    @Min(value = 0, message = "Stock quantity cannot be negative")
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity;
+
+    @Min(value = 0, message = "Minimum stock level cannot be negative")
+    @Column(name = "min_stock_level")
+    @Builder.Default
+    private Integer minStockLevel = 10;
+
     @Column(length = 100)
     private String category;
 
@@ -66,6 +81,13 @@ public class Product {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+        if (stockQuantity == 0) {
+            this.status = ProductStatus.OUT_OF_STOCK;
+        } else if (stockQuantity < minStockLevel) {
+            this.status = ProductStatus.LOW_STOCK;
+        } else {
+            this.status = ProductStatus.IN_STOCK;
+        }
     }
 
     public Product(String sku, String name, String description, BigDecimal price,
