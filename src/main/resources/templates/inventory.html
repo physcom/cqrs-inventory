@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetroNiche | Enterprise Inventory Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #0f172a;
+            --dark-secondary: #1e293b;
+            --light-color: #f8fafc;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+            --header-height: 72px;
+            --border-radius: 12px;
+            --box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --box-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-50);
+            color: var(--dark-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 1000;
+            box-shadow: var(--box-shadow-lg);
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: var(--header-height);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            cursor: pointer;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .logo-text {
+            transition: var(--transition);
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar.collapsed .toggle-btn {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-menu {
+            padding: 24px 12px;
+        }
+
+        .menu-section {
+            margin-bottom: 24px;
+        }
+
+        .menu-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0 16px 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar.collapsed .menu-section-title {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .menu-item:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .menu-item.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-icon {
+            font-size: 1.3rem;
+            width: 28px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            transition: var(--transition);
+            flex: 1;
+        }
+
+        .sidebar.collapsed .menu-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .menu-badge {
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: auto;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        /* Page Content */
+        .page-content {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page-content.hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 32px;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            color: var(--dark-color);
+            font-weight: 800;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .page-title p {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 12px 16px 12px 44px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            width: 320px;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            background-color: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1.1rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: white;
+            border: 2px solid var(--gray-200);
+            width: 44px;
+            height: 44px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--gray-50);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gray-50);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            background-color: white;
+            border: 2px solid var(--gray-200);
+        }
+
+        .user-profile:hover {
+            border-color: var(--primary-color);
+            background-color: var(--gray-50);
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .user-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+
+        /* Dashboard Stats */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: flex-start;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--box-shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.total { 
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); 
+            color: var(--primary-color); 
+        }
+        .stat-icon.low-stock { 
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1)); 
+            color: var(--warning-color); 
+        }
+        .stat-icon.categories { 
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(14, 165, 233, 0.1)); 
+            color: var(--accent-color); 
+        }
+        .stat-icon.revenue { 
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); 
+            color: var(--success-color); 
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-content h3 {
+            font-size: 2rem;
+            margin-bottom: 4px;
+            font-weight: 800;
+            color: var(--dark-color);
+        }
+
+        .stat-content p {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.up {
+            color: var(--success-color);
+        }
+
+        .stat-trend.down {
+            color: var(--danger-color);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Table Container */
+        .table-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 32px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .table-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: var(--gray-50);
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        tr:hover {
+            background-color: var(--gray-50);
+        }
+
+        .stock-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .stock-status.in-stock {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .stock-status.low-stock {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .stock-status.out-of-stock {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            cursor: pointer;
+            margin-right: 12px;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            padding: 6px;
+            border-radius: 6px;
+        }
+
+        .action-btn:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-100);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--dark-color);
+            border: 2px solid var(--gray-300);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-50);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 24px;
+            margin-top: 24px;
+            border-top: 2px solid var(--gray-100);
+        }
+
+        .pagination-info {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            padding: 8px 14px;
+            border: 2px solid var(--gray-300);
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-700);
+            transition: var(--transition);
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.95);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.6rem;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: var(--gray-100);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 2px solid var(--gray-100);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 16px 20px;
+            box-shadow: var(--box-shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: var(--transition);
+            border-left: 4px solid;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .toast-content p {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-toggle {
+                display: flex !important;
+            }
+            
+            .search-box input {
+                width: 200px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: white;
+            border: 2px solid var(--gray-200);
+            width: 44px;
+            height: 44px;
+            border-radius: var(--border-radius);
+            color: var(--dark-color);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Error State */
+        .error-message {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--danger-color);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin: 16px 0;
+            color: var(--danger-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: var(--gray-700);
+        }
+        .chart-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--gray-300);
+            background: white;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chart-btn:hover {
+            background: var(--gray-50);
+        }
+
+        .chart-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        /* Analytics Tabs */
+        .analytics-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analytics-tab:hover {
+            color: var(--primary-color);
+            background: var(--gray-50);
+        }
+
+        .analytics-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: transparent;
+        }
+
+        .analytics-tab i {
+            font-size: 1.1rem;
+        }
+
+        .analytics-tab-content {
+            animation: fadeIn 0.3s ease;
+        }
+
+        .analytics-tab-content.hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo" id="go-to-dashboard">
+                <i class="fas fa-cubes logo-icon"></i>
+                <span class="logo-text">MetroNiche</span>
+            </div>
+            <button class="toggle-btn" id="toggle-sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-section-title">Main</div>
+                <a class="menu-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line menu-icon"></i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a class="menu-item" data-page="inventory">
+                    <i class="fas fa-boxes menu-icon"></i>
+                    <span class="menu-text">Inventory</span>
+                    <span class="menu-badge" id="inventory-count">...</span>
+                </a>
+                <a class="menu-item" data-page="analytics">
+                    <i class="fas fa-chart-pie menu-icon"></i>
+                    <span class="menu-text">Analytics</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Management</div>
+                <a class="menu-item" data-page="suppliers">
+                    <i class="fas fa-truck menu-icon"></i>
+                    <span class="menu-text">Suppliers</span>
+                </a>
+                <a class="menu-item" data-page="orders">
+                    <i class="fas fa-shopping-cart menu-icon"></i>
+                    <span class="menu-text">Orders</span>
+                    <span class="menu-badge">24</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">System</div>
+                <a class="menu-item" data-page="users">
+                    <i class="fas fa-users menu-icon"></i>
+                    <span class="menu-text">Users</span>
+                </a>
+                <a class="menu-item" data-page="settings">
+                    <i class="fas fa-cog menu-icon"></i>
+                    <span class="menu-text">Settings</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="page-title">
+                <h1 id="page-title">Dashboard</h1>
+                <p id="page-subtitle">Real-time inventory monitoring and analytics</p>
+            </div>
+            
+            <div class="header-actions">
+                <button class="mobile-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="global-search" placeholder="Search products, SKU, categories...">
+                </div>
+
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <div class="user-profile" id="user-profile">
+                    <div class="user-avatar">AD</div>
+                    <div class="user-info">
+                        <h4>Admin</h4>
+                        <p>Super Admin</p>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page-content">
+            <!-- Dashboard Stats -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-products"><span class="loading-spinner"></span></h3>
+                        <p>Total Products</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12% from last month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon low-stock">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="low-stock-count"><span class="loading-spinner"></span></h3>
+                        <p>Low Stock Items</p>
+                        <div class="stat-trend down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>3% from yesterday</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon categories">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="categories-count"><span class="loading-spinner"></span></h3>
+                        <p>Categories</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>2 new categories</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon revenue">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="monthly-revenue"><span class="loading-spinner"></span></h3>
+                        <p>Inventory Value</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8.2% from last month</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Inventory Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Recent Products</h3>
+                    <div class="table-actions">
+                        <button class="btn-secondary" id="refresh-dashboard">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn-primary" id="add-product-btn">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 48px;">
+                                    <span class="loading-spinner" style="width: 40px; height: 40px;"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inventory Page -->
+        <div id="inventory-page" class="page-content hidden">
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>All Inventory Items</h3>
+                    <div class="table-actions">
+                        <button class="btn-secondary" id="filter-inventory">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="btn-secondary" id="export-inventory">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn-primary" id="add-product-inventory">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="full-inventory-table">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 48px;">
+                                    <span class="loading-spinner" style="width: 40px; height: 40px;"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing <span id="page-start">0</span> to <span id="page-end">0</span> of <span id="total-items">0</span> items
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" id="prev-page"><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn" id="next-page"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Other Pages -->
+        <div id="analytics-page" class="page-content hidden">
+            <!-- Analytics Tabs -->
+            <div style="margin-bottom: 24px;">
+                <div class="chart-actions" style="border-bottom: 2px solid var(--gray-200); padding-bottom: 0;">
+                    <button class="analytics-tab active" data-tab="inventory">
+                        <i class="fas fa-boxes"></i> Inventory Analytics
+                    </button>
+                    <button class="analytics-tab" data-tab="supply-chain">
+                        <i class="fas fa-network-wired"></i> Supply Chain Analytics
+                    </button>
+                    <button class="analytics-tab" data-tab="financial">
+                        <i class="fas fa-dollar-sign"></i> Financial Analytics
+                    </button>
+                </div>
+            </div>
+
+            <!-- Inventory Analytics Tab -->
+            <div id="inventory-analytics-content" class="analytics-tab-content">
+                <!-- Key Metrics Summary -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); color: var(--primary-color);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="analytics-growth">+24.5%</h3>
+                            <p>Monthly Growth</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>vs last month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); color: var(--success-color);">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="analytics-turnover">4.2x</h3>
+                            <p>Inventory Turnover</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Excellent performance</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1)); color: var(--warning-color);">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="analytics-stockout">2.8%</h3>
+                            <p>Stockout Rate</p>
+                            <div class="stat-trend down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>Improved</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(14, 165, 233, 0.1)); color: var(--accent-color);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="analytics-satisfaction">94%</h3>
+                            <p>Order Accuracy</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Outstanding</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Charts Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; margin-bottom: 32px;">
+                <!-- Sales Trend Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Sales Performance Trend</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn active" data-period="7d">7 Days</button>
+                            <button class="chart-btn" data-period="30d">30 Days</button>
+                            <button class="chart-btn" data-period="90d">90 Days</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="salesTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Category Distribution Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Inventory by Category</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn active" data-metric="value">Value</button>
+                            <button class="chart-btn" data-metric="quantity">Quantity</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="categoryDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row Charts -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; margin-bottom: 32px;">
+                <!-- Stock Level Trends -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Stock Level Trends</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn active">Weekly</button>
+                            <button class="chart-btn">Monthly</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="stockLevelChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Products Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Top 10 Products by Revenue</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn active">This Month</button>
+                            <button class="chart-btn">Last Month</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="topProductsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Row Charts -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+                <!-- Revenue by Month -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Monthly Revenue Analysis</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn active">2024</button>
+                            <button class="chart-btn">2023</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 350px;">
+                        <canvas id="monthlyRevenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Stock Status Distribution -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Stock Status</h3>
+                    </div>
+                    <div style="position: relative; height: 350px; display: flex; align-items: center; justify-content: center;">
+                        <canvas id="stockStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fourth Row - Full Width -->
+            <div class="chart-container" style="margin-bottom: 32px;">
+                <div class="chart-header">
+                    <h3>Inventory Turnover Rate by Category</h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn active">Quarterly</button>
+                        <button class="chart-btn">Yearly</button>
+                    </div>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="turnoverRateChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Analytics Insights -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>📈 Key Insights</h3>
+                    </div>
+                    <div style="padding: 0 24px 24px;">
+                        <div style="padding: 16px; background: var(--gray-50); border-radius: 8px; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--success-color), #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                                    <i class="fas fa-arrow-trend-up"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Strong Performance</h4>
+                                    <p style="font-size: 0.8rem; color: var(--gray-600);">Electronics category showing 32% growth</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 16px; background: var(--gray-50); border-radius: 8px; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--warning-color), #d97706); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Attention Needed</h4>
+                                    <p style="font-size: 0.8rem; color: var(--gray-600);">42 products below minimum stock level</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 16px; background: var(--gray-50); border-radius: 8px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Optimization Opportunity</h4>
+                                    <p style="font-size: 0.8rem; color: var(--gray-600);">Reduce holding costs by 15% with better forecasting</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>🎯 Performance Metrics</h3>
+                    </div>
+                    <div style="padding: 0 24px 24px;">
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9rem; font-weight: 600;">Inventory Accuracy</span>
+                                <span style="font-size: 0.9rem; font-weight: 700; color: var(--success-color);">98.5%</span>
+                            </div>
+                            <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                <div style="width: 98.5%; height: 100%; background: linear-gradient(90deg, var(--success-color), #059669);"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9rem; font-weight: 600;">Order Fulfillment Rate</span>
+                                <span style="font-size: 0.9rem; font-weight: 700; color: var(--success-color);">96.2%</span>
+                            </div>
+                            <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                <div style="width: 96.2%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9rem; font-weight: 600;">Demand Forecast Accuracy</span>
+                                <span style="font-size: 0.9rem; font-weight: 700; color: var(--warning-color);">87.3%</span>
+                            </div>
+                            <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                <div style="width: 87.3%; height: 100%; background: linear-gradient(90deg, var(--warning-color), #f59e0b);"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9rem; font-weight: 600;">Supplier On-Time Delivery</span>
+                                <span style="font-size: 0.9rem; font-weight: 700; color: var(--success-color);">94.8%</span>
+                            </div>
+                            <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                <div style="width: 94.8%; height: 100%; background: linear-gradient(90deg, var(--accent-color), #0891b2);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Supply Chain Analytics Tab -->
+            <div id="supply-chain-analytics-content" class="analytics-tab-content hidden">
+                <!-- Supply Chain Metrics -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); color: var(--primary-color);">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="sc-total-suppliers">8</h3>
+                            <p>Active Suppliers</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>2 new this quarter</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); color: var(--success-color);">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="sc-total-transactions">847</h3>
+                            <p>Total Transactions</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+18% this month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1)); color: var(--warning-color);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="sc-avg-lead-time">4.8 days</h3>
+                            <p>Avg Lead Time</p>
+                            <div class="stat-trend down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>Improved by 15%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(14, 165, 233, 0.1)); color: var(--accent-color);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="sc-transaction-volume">$892K</h3>
+                            <p>Transaction Volume</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>This month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supply Chain Charts -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; margin-bottom: 32px;">
+                    <!-- Transaction Flow Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Supply Chain Transaction Flow</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active">This Month</button>
+                                <button class="chart-btn">Last Month</button>
+                            </div>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="transactionFlowChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Supplier Performance Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Top Suppliers by Volume</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active">By Value</button>
+                                <button class="chart-btn">By Count</button>
+                            </div>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="supplierPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; margin-bottom: 32px;">
+                    <!-- Lead Time Analysis -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Lead Time Analysis by Supplier Type</h3>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="leadTimeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Status Distribution -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Transaction Status Distribution</h3>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="transactionStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full Width Charts -->
+                <div class="chart-container" style="margin-bottom: 32px;">
+                    <div class="chart-header">
+                        <h3>Supply Chain Network Connections Heatmap</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn active">All Time</button>
+                            <button class="chart-btn">This Quarter</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 400px;">
+                        <canvas id="networkHeatmapChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Supply Chain Insights -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>🔗 Network Analysis</h3>
+                        </div>
+                        <div style="padding: 0 24px 24px;">
+                            <div style="padding: 16px; background: var(--gray-50); border-radius: 8px; margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">Network Density</span>
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: var(--success-color);">68%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 68%; height: 100%; background: linear-gradient(90deg, var(--success-color), #059669);"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 16px; background: var(--gray-50); border-radius: 8px; margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">Avg Connections/Supplier</span>
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: var(--primary-color);">3.2</span>
+                                </div>
+                                <p style="font-size: 0.8rem; color: var(--gray-600); margin-top: 8px;">Well-connected network with balanced distribution</p>
+                            </div>
+                            
+                            <div style="padding: 16px; background: var(--gray-50); border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">Critical Path Length</span>
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: var(--accent-color);">2.8 hops</span>
+                                </div>
+                                <p style="font-size: 0.8rem; color: var(--gray-600); margin-top: 8px;">Efficient supply chain with minimal intermediaries</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>⚠️ Supply Chain Risks</h3>
+                        </div>
+                        <div style="padding: 0 24px 24px;">
+                            <div style="padding: 16px; background: var(--gray-50); border-radius: 8px; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--warning-color), #d97706); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Single Point of Failure</h4>
+                                        <p style="font-size: 0.8rem; color: var(--gray-600);">2 suppliers with no backup</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 16px; background: var(--gray-50); border-radius: 8px; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Delayed Shipments</h4>
+                                        <p style="font-size: 0.8rem; color: var(--gray-600);">12 orders past expected delivery</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 16px; background: var(--gray-50); border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Price Volatility</h4>
+                                        <p style="font-size: 0.8rem; color: var(--gray-600);">15% price variance in electronics</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Analytics Tab -->
+            <div id="financial-analytics-content" class="analytics-tab-content hidden">
+                <!-- Financial Metrics -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); color: var(--primary-color);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="fin-gross-margin">32.5%</h3>
+                            <p>Gross Margin</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+2.3% vs target</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); color: var(--success-color);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="fin-cogs">$2.4M</h3>
+                            <p>Cost of Goods Sold</p>
+                            <div class="stat-trend down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>Optimized</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1)); color: var(--warning-color);">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="fin-holding-cost">$185K</h3>
+                            <p>Inventory Holding Cost</p>
+                            <div class="stat-trend down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>Reduced 8%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(14, 165, 233, 0.1)); color: var(--accent-color);">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="fin-roi">18.2%</h3>
+                            <p>Return on Investment</p>
+                            <div class="stat-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Excellent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Charts -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; margin-bottom: 32px;">
+                    <!-- Cost Breakdown Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Cost Structure Analysis</h3>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="costBreakdownChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Profit Margin Trend -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Profit Margin Trend</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active">Monthly</button>
+                                <button class="chart-btn">Quarterly</button>
+                            </div>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="profitMarginChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+                    <!-- Revenue vs Cost -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Revenue vs Cost Analysis</h3>
+                        </div>
+                        <div style="position: relative; height: 350px;">
+                            <canvas id="revenueCostChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Payment Terms Distribution -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Payment Terms</h3>
+                        </div>
+                        <div style="position: relative; height: 350px; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="paymentTermsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Insights -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>💰 Cost Optimization</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">Procurement Efficiency</span>
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: var(--success-color);">92%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 92%; height: 100%; background: linear-gradient(90deg, var(--success-color), #059669);"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">Inventory Carrying Cost Ratio</span>
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: var(--success-color);">18%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 18%; height: 100%; background: linear-gradient(90deg, var(--success-color), #10b981);"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">Waste Reduction</span>
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: var(--warning-color);">1.2%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 1.2%; height: 100%; background: linear-gradient(90deg, var(--warning-color), #f59e0b);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>📊 Financial KPIs</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-200);">
+                                <span style="font-size: 0.9rem; color: var(--gray-600);">Inventory Turnover Ratio</span>
+                                <span style="font-size: 0.9rem; font-weight: 700;">4.2x</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-200);">
+                                <span style="font-size: 0.9rem; color: var(--gray-600);">Days Sales Outstanding</span>
+                                <span style="font-size: 0.9rem; font-weight: 700;">38 days</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-200);">
+                                <span style="font-size: 0.9rem; color: var(--gray-600);">Cash-to-Cash Cycle</span>
+                                <span style="font-size: 0.9rem; font-weight: 700;">52 days</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-200);">
+                                <span style="font-size: 0.9rem; color: var(--gray-600);">Working Capital Ratio</span>
+                                <span style="font-size: 0.9rem; font-weight: 700;">1.8</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+                                <span style="font-size: 0.9rem; color: var(--gray-600);">Quick Ratio</span>
+                                <span style="font-size: 0.9rem; font-weight: 700;">1.2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="suppliers-page" class="page-content hidden">
+            <div class="empty-state">
+                <i class="fas fa-truck"></i>
+                <h3>Suppliers Management</h3>
+                <p>Supplier management features coming soon</p>
+            </div>
+        </div>
+        
+        <div id="orders-page" class="page-content hidden">
+            <div class="empty-state">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Orders Management</h3>
+                <p>Order management features coming soon</p>
+            </div>
+        </div>
+        
+        <div id="users-page" class="page-content hidden">
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h3>User Management</h3>
+                <p>User management features coming soon</p>
+            </div>
+        </div>
+        
+        <div id="settings-page" class="page-content hidden">
+            <div class="empty-state">
+                <i class="fas fa-cog"></i>
+                <h3>System Settings</h3>
+                <p>Settings panel coming soon</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="add-product-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Product</h3>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="product-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-name">Product Name *</label>
+                            <input type="text" id="product-name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-sku">SKU *</label>
+                            <input type="text" id="product-sku" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-category">Category *</label>
+                            <select id="product-category" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="furniture">Furniture</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="home-office">Home & Office</option>
+                                <option value="clothing">Clothing</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-price">Price ($) *</label>
+                            <input type="number" id="product-price" class="form-control" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-stock">Initial Stock *</label>
+                            <input type="number" id="product-stock" class="form-control" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-min-stock">Min Stock Level</label>
+                            <input type="number" id="product-min-stock" class="form-control" min="0" value="10">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-description">Description</label>
+                        <textarea id="product-description" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-product">
+                    Cancel
+                </button>
+                <button class="btn-primary" id="save-product">
+                    <i class="fas fa-save"></i> Save Product
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+   
+    <script src="supply-chain-analytics.js"></script>
+</body>
+</html>
